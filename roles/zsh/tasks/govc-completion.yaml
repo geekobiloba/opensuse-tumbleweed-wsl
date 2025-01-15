@@ -1,0 +1,8 @@
+# govc-completion tasks for zsh role
+
+- name: Installing govc completion
+  become: true
+  get_url:
+    url:  https://raw.githubusercontent.com/vmware/govmomi/refs/heads/main/scripts/govc_bash_completion
+    dest: /etc/bash_completion.d/govc_bash_completion
+

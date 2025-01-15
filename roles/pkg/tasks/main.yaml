@@ -1,0 +1,29 @@
+# tasks for pkg role
+
+- name: Installing general packages
+  become: true
+  community.general.zypper:
+    name:               '{{ packages.present }}'
+    state:              present
+    disable_recommends: false
+
+- name: Uninstalling unneeded packages
+  become: true
+  community.general.zypper:
+    name:       '{{ packages.absent }}'
+    state:      absent
+    clean_deps: true
+
+- name: Installing wslu
+  become: true
+  tags:
+    - wslu
+  import_tasks: wslu.yaml
+
+- name: Installing neowofetch
+  become: true
+  tags:
+    - neofetch
+    - neowofetch
+  import_tasks: neowofetch.yaml
+

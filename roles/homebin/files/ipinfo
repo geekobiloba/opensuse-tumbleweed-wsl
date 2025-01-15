@@ -1,0 +1,68 @@
+#!/usr/bin/env bash
+#
+# ipinfo - Get public IP address info from ipinfo.io
+#
+
+set -Eeuo pipefail
+
+################################################################################
+# Functions
+################################################################################
+
+showhelp(){
+  local  CMD="$(basename $0)"
+  local INFO="$(
+    awk '/^#[[:space:]]/ {sub("^#[[:space:]]+", "") ; print ; exit}' $0
+  )"
+
+  cat <<EOF
+
+$INFO
+
+USAGE
+
+  $CMD [IP_ADDR]
+
+  $CMD -h
+
+OPTIONS
+
+  -h  Show this help.
+
+NOTES
+
+  Get the current machine public IP address when no IP_ADDR is given.
+
+EOF
+}
+
+ipinfo(){
+  local SERVER="ipinfo.io"
+  local IPADDR="${1:-}"
+
+  curl -s ${SERVER}/${IPADDR} | jq
+}
+
+################################################################################
+# Main
+################################################################################
+
+case ${1:-} in
+  ("") # no arg at all
+    ipinfo
+    ;;
+  (-*) # with option
+    while getopts :h optchar ; do 
+      case $optchar in
+        (h) showhelp ; exit 0 ;;
+        (*) showhelp ; exit 1 ;; # wrong option
+      esac
+    done
+    ;;
+  (*) # no option, with arg
+    ipinfo $1
+    ;;
+esac
+
+# vim: ft=bash:
+

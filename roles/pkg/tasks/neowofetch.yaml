@@ -1,0 +1,15 @@
+# neowofetch tasks for pkg role
+
+- name: Uninstalling neofetch
+  become: true
+  community.general.zypper:
+    name:       neofetch
+    state:      absent
+    clean_deps: true
+
+- name: Installing neowofetch
+  become: true
+  community.general.zypper:
+    name:               neowofetch
+    disable_recommends: false
+

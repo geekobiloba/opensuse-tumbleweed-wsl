@@ -1,0 +1,12 @@
+alias     rm='rm -i'
+alias     mv='mv -i'
+alias     cp='cp -i'
+alias     rl="readlink -f"
+alias    cls='clear'
+alias    sed='sed  -E'
+alias   grep='grep -E --color'
+alias   diff='diff    --color'
+alias   sudo='sudo '
+alias  mkdir='mkdir -p'
+alias  dmesg='dmesg -HTL'
+alias reload="exec $SHELL"

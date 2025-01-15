@@ -1,0 +1,102 @@
+#!/usr/bin/env bash
+#
+# asinfo - Get AS info from whois.cymru.com
+#
+
+set -Eeuo pipefail
+
+################################################################################
+# Functions
+################################################################################
+
+showhelp(){
+  local  CMD="$(basename $0)"
+  local INFO="$(
+    awk '/^#[[:space:]]/ {sub("^#[[:space:]]+", "") ; print ; exit}' $0
+  )"
+
+  cat <<EOF
+
+$INFO
+
+USAGE
+
+  $CMD [-t|-j] ASN
+
+  $CMD -h
+
+OPTIONS
+
+  -t  Show AS info as table (default).
+
+  -j  Show AS info as JSON.
+
+  -h  Show this help.
+
+NOTES
+
+  ASN can be either number only or prefixed with AS, like AS15169.
+
+EOF
+}
+
+asinfo(){
+  local SRV="whois.cymru.com"
+  local OPT="$1"
+  local ARG="$(sed -E 's,^(as)?([0-9]+)$,AS\2,i' <<< $2)"
+
+  case $OPT in
+    (-t)
+      whois -h $SRV "-v $ARG" |\
+      sed '/Warning: RIPE flags/d' # discard warning
+      ;;
+    (-j)
+      asinfo -t $ARG |\
+      awk '
+        BEGIN{
+          FS = "[[:space:]]*\\|[[:space:]]*"
+        }
+
+        NR == 1 { for(i=1; i<=NF; i++) key[i]=$i }
+        NR == 2 { for(i=1; i<=NF; i++) val[i]=$i }
+
+        # Compose JSON
+        END{
+          print "{"
+
+          for(i=1; i<=NF; i++)
+            printf "\42%s\42 : \42%s\42 %s\n", key[i], val[i], i<NF ? "," : ""
+
+          print "}"
+        }
+      ' |\
+      jq
+      ;;
+  esac
+}
+
+################################################################################
+# Main
+################################################################################
+
+case ${1:-} in
+  ("") # no arg at all
+    showhelp ; exit 1
+    ;;
+  (-*) # with option
+    while getopts :t:j:h optchar ; do 
+      case $optchar in
+        (t) asinfo -t $OPTARG ; exit $? ;;
+        (j) asinfo -j $OPTARG ; exit $? ;;
+        (h) showhelp ; exit 0 ;;
+        (*) showhelp ; exit 1 ;; # wrong option
+      esac
+    done
+    ;;
+  (*) # no option, with arg
+    asinfo -t $1
+    ;;
+esac
+
+# vim: ft=bash:
+

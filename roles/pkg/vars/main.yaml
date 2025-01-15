@@ -1,0 +1,39 @@
+# vars for pkg role
+
+packages:
+  present:
+    - bind-utils
+    - binutils
+    - curl
+    - direnv
+    - expect
+    - eza # use Linux version instead of Windows to show correct permissions
+    - file
+    - git # for Ansible git module
+    - gnu_parallel
+    - htop
+    - ipmitool
+    - jq
+    - mtr
+    - netcat-openbsd
+    - nmap # better than the Windows version
+    - progress
+    - rsync
+    - scout
+    - screen
+    - socat
+    - subnetcalc
+    - tcpdump
+    - telnet # better than the Windows version
+    - traceroute # faster than Windows tracert
+    - tree
+    - whois
+    - zellij
+  absent:
+    - bat
+    - govc
+    - iperf
+    - neovim
+    - ripgrep
+    - yq
+

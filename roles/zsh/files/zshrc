@@ -1,0 +1,328 @@
+################################################################################
+# General environment
+################################################################################
+
+export   LESS="-Ri"
+export EDITOR="nvim"
+
+# Display the first man page found
+# See: man man
+export MAN_POSIXLY_CORRECT=1
+
+# Ansible requires the locale encoding to be UTF-8
+export LC_ALL="C.utf8"
+
+# PowerShell fix for "You must install or update .NET to run this application".
+# See: https://stackoverflow.com/questions/73131168/you-must-install-or-update-net-to-run-this-application
+export DOTNET_ROLL_FORWARD="LatestMajor"
+
+export BAT_THEME="Dracula"
+
+################################################################################
+# ZSH specific
+################################################################################
+
+# Exclude command started with space from history
+setopt HIST_IGNORE_SPACE
+
+# Additional key bindings
+bindkey "^U" backward-kill-line
+
+# Use bash completion
+autoload -U bashcompinit && bashcompinit
+
+################################################################################
+# pyenv
+#
+# Load before oh-my-zsh pyenv plugin
+################################################################################
+
+# BEGIN pyenv
+export PYENV_ROOT="${HOME}/.pyenv"
+test -d "${PYENV_ROOT}/bin" && PATH=$_:$PATH && export PATH
+eval "$(pyenv init -)"
+# END pyenv
+
+################################################################################
+# neofetch/neowofetch
+#
+# Should come before powerlevel10k to correctly call at startup
+################################################################################
+
+# Get the first found image from neofetch config directory
+NEOFETCH_IMG="$(
+  find ~/.config/neofetch/ -type f -exec file --mime-type {} \; \
+  | awk -F: '$2~/image/ {img[i++]=$1} END {print img[0]}'
+)"
+
+neofetch(){
+  case $1 in
+    ("")
+      if [ -r "$NEOFETCH_IMG" ] ; then
+
+        # Disabling packages and de_version speeds up neofetch.
+        # And, yes, --iterm2 option works on Linux, too,
+        # at least in Konsole and Yakuake.
+        command neofetch --disable packages --de_version off \
+          --memory_display infobar --bar_char ▓ ░ \
+          --iterm2 $NEOFETCH_IMG --size 300px
+      else
+        if awk -F '="?| +' '$1 == "ID_LIKE" && $2 == "opensuse" {exit 1}' /etc/os-release ; then
+          command neofetch --disable packages --de_version off \
+            --memory_display infobar --bar_char ▓ ░
+        else
+          command neofetch --disable packages --de_version off \
+            --memory_display infobar --bar_char ▓ ░ \
+            --ascii_distro opensuse
+        fi
+      fi
+      ;;
+    (*) command neofetch $@ ;;
+  esac
+}
+
+alias neowofetch='neofetch'
+
+# Show neofetch at startup when all these conditions are met:
+#
+#   1. NVIM is not set
+#   2. NO_NEOFETCH is not set
+#   3. KONSOLE_VERSION is set
+#
+[   -z "${NVIM}"            ] && \
+[   -z "${NO_NEOFETCH:-}"   ] && \
+[ ! -z "${KONSOLE_VERSION}" ] && \
+neofetch
+
+################################################################################
+# Powerlevel10k
+################################################################################
+
+# Instant prompt
+# Should stay close to the top of ~/.zshrc
+test -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" \
+&& source $_
+
+source ~/.p10k.zsh
+
+# Theme should be loaded before oh-my-zsh
+ZSH_THEME="powerlevel10k/powerlevel10k"
+
+typeset -g POWERLEVEL9K_INSTANT_PROMPT=off
+typeset -g POWERLEVEL9K_DIR_BACKGROUND=33 # blue prompt
+
+# prompt gradation for macOS or WSL
+if uname -s | grep -q Darwin || uname -r | grep -q WSL ; then
+  typeset -g POWERLEVEL9K_LEFT_PROMPT_FIRST_SEGMENT_START_SYMBOL='%K{#585854} %K{#84847C} %K{#B1B1A5} %k'
+  typeset -g   POWERLEVEL9K_RIGHT_PROMPT_LAST_SEGMENT_END_SYMBOL='%K{#B1B1A5} %K{#84847C} %K{#585854} %k'
+fi
+
+################################################################################
+# oh-my-zsh
+#
+# See: https://github.com/ohmyzsh/ohmyzsh/wiki/Settings
+################################################################################
+
+export ZSH="${HOME}/.oh-my-zsh"
+
+# History timestamp fomat
+HIST_STAMPS="yyyy-mm-dd"
+
+# Treat dash and underscore similarly
+HYPHEN_INSENSITIVE="true"
+
+# Plugins should be loaded before oh-my-zsh
+plugins=(
+  docker
+  dotnet
+  fast-syntax-highlighting
+  gh
+  git
+  golang
+  httpie
+  nmap
+  opentofu
+  pip
+  podman
+  python
+  rclone
+  systemd
+  terraform
+  zsh-autosuggestions
+  zsh-history-substring-search
+ #kubectl
+ #kubetail
+ #pyenv # doesn't work
+ #rsync
+ #suse
+ #zsh-syntax-highlighting
+)
+
+source ${ZSH}/oh-my-zsh.sh
+
+################################################################################
+# Extra path
+################################################################################
+
+test -d ~/bin        && PATH=$_:$PATH && export PATH
+test -d ~/go/bin     && PATH=$_:$PATH && export PATH
+test -d ~/.cargo/bin && PATH=$_:$PATH && export PATH
+test -d ~/.local/bin && PATH=$_:$PATH && export PATH
+
+################################################################################
+# pipx
+################################################################################
+
+#export PIPX_HOME="${HOME}/.pipx"
+
+# Tab completion
+# See: pipx completions
+eval "$(register-python-argcomplete pipx)"
+
+################################################################################
+# direnv
+################################################################################
+
+# Grey status
+export DIRENV_LOG_FORMAT=$'\e[90mdirenv: %s\e[0m'
+
+eval "$(direnv hook zsh)"
+
+################################################################################
+# fzf
+#
+# Should be loaded after oh-my-zsh plugins
+################################################################################
+
+source <(fzf --zsh)
+
+################################################################################
+# nvm
+################################################################################
+
+if [ -d ${HOME}/.nvm ] ; then
+  export NVM_DIR="${HOME}/.nvm"
+
+  # Load nvm
+  [ -s "${NVM_DIR}/nvm.sh" ] && . "${NVM_DIR}/nvm.sh"
+
+  # Load nvm bash_completion
+  [ -s "${NVM_DIR}/bash_completion" ] && . "${NVM_DIR}/bash_completion"
+fi
+
+################################################################################
+# Perl
+################################################################################
+
+test -r ~/.perlrc && . $_
+
+################################################################################
+# Additional completions
+################################################################################
+
+# The oh-my-zsh pyenv plugins doesn't work,
+# source the completion file instead.
+
+# jc completion is still buggy and doesn't work
+
+for f in pyenv # jc
+do test -r /etc/zsh_completion.d/${f} && source $_
+done
+
+################################################################################
+# Aliases
+################################################################################
+
+alias   ls='eza'
+alias    l='ls -lgah'
+alias   la='ls -lgAh'
+alias   ll='ls -lgh'
+alias  lsa='ls -lgah'
+alias   l1='ls -1'
+alias   lt='ls -T'
+alias  llt='ll -T'
+alias  lat='la -T'
+alias  lta='lat'
+alias  lla='ls -lah'
+alias llat='ls -lahT'
+alias llta='llat'
+
+alias     rl="readlink -f"
+alias    rgh="rg --hidden -g '!.git'"
+alias    rga="rgh"
+alias    w3m="w3m -sixel"
+alias    cls="clear"
+alias    sed="sed  -E"
+alias   grep="grep -E --color"
+alias   diff="diff    --color"
+alias   ncal="cal -v"
+alias   cal3="cal -v3"
+alias   sudo="sudo "
+alias   trim='sed "s,^\\s+|\\s+\$,,g"'
+alias  xclip="trim | xclip -r -sel clip"
+alias  mkdir="mkdir -p"
+alias  dmesg="dmesg -HTL"
+alias reload="exec $SHELL"
+alias vmstat="vmstat -SM -w"
+alias iperf3="iperf"
+alias pbcopy="xclip"
+
+# nvim
+if which nvim &>/dev/null ; then
+  alias      vi="nvim"
+  alias     vim="nvim"
+  alias    view="nvim -R"
+  alias vimdiff="nvim -d"
+fi
+
+################################################################################
+# Windows aliases
+################################################################################
+
+if which nvim.exe &>/dev/null ; then
+  alias      vi="nvim.exe"
+  alias     vim="nvim.exe"
+  alias    view="nvim.exe -R"
+  alias vimdiff="nvim.exe -d"
+fi
+
+for bin in yq bat rg fd iperf3 ; do
+  which ${bin}.exe &>/dev/null && alias ${bin}="${bin}.exe"
+done
+
+################################################################################
+# govc
+################################################################################
+
+test -r ~/.govcrc && . $_
+
+# govc on Windows
+which govc.exe &>/dev/null &&\
+which pwsh.exe &>/dev/null &&\
+alias govc='pwsh.exe -c govc.exe'
+
+################################################################################
+# Functions
+################################################################################
+
+colortbl(){
+  for i in {0..255} ; do
+    print -Pn \
+      "%K{$i}  %k%F{$i}${(l:3::0:)i}%f " \
+      ${${(M)$((i%6)):#3}:+$'\n'}
+  done
+}
+
+################################################################################
+# k8s
+################################################################################
+
+#test -d ~/.krew/bin && PATH=$_:$PATH && export PATH
+#
+#test -r ~/.kubectl-aliases/.kubectl_aliases && source $_
+#
+#alias  kns="kubectl ns"
+#alias kctx="kubectl ctx"
+
+# vim: ft=zsh:
+

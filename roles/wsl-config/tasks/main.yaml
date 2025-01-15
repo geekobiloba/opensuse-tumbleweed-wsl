@@ -1,0 +1,12 @@
+# tasks for wsl-config role
+
+- name: Installing WSL config
+  become: true
+  lineinfile:
+    path:   /etc/wsl.conf
+    create: true
+    backup: true
+    regexp: '^\s*options\s*=\s*"metadata"'
+    insertafter: '^\s*\[\s*automount\s*\]'
+    line:        'options = "metadata"'
+

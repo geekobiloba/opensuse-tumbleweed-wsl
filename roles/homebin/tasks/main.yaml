@@ -1,0 +1,16 @@
+# tasks for homebin tasks
+
+- name: Ensuring ~/bin/ directory existence
+  file:
+    path:  ~/bin
+    state: directory
+
+- name: Installing local scripts to ~/bin
+  copy:
+    src:  "{{ item }}"
+    dest: ~/bin/{{ item }}
+    mode: "0755"
+  loop:
+    - ipinfo
+    - asinfo
+

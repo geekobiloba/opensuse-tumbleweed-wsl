@@ -1,0 +1,35 @@
+- name: openSUSE new install setup
+  hosts: all
+  vars:
+    current_user: "{{
+        lookup('env', 'USER')
+        if
+          ansible_host == 'localhost'
+            and
+          ansible_connection == 'local'
+        else
+          ansible_user
+      }}"
+
+  roles:
+
+    - role: wsl-config
+      tags:
+        - wsl-config
+
+    - role: pkg
+      tags:
+        - pkg
+
+    - role: ping
+      tags:
+        - ping
+
+    - role: zsh
+      tags:
+        - zsh
+
+    - role: homebin
+      tags:
+        - homebin
+
