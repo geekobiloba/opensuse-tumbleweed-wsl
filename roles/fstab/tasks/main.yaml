@@ -1,0 +1,34 @@
+# tasks for fstab role
+
+# NOTE: To automount my personal Google Drive on WSL as drvfs.
+#       The Google Drive should be mounted on Windows as drive, not as folders.
+#       UID and GID are set here because it doesn't work from wsl.conf
+
+- name: Creating mount subdirectories
+  become: true
+  file:
+    path:  '/mnt/{{ item }}'
+    owner: '{{ current_user }}'
+    group: '{{ current_user }}'
+    state: directory
+  loop: '{{ gdrive_letters }}'
+
+- name: Getting current user UID & GID
+  getent:
+    database: passwd
+    key:      '{{ current_user }}'
+
+- name: Setting Google Drive automount using fstab
+  become: true
+  lineinfile:
+    path:   /etc/fstab
+    regexp: '/mnt/{{ item }}'
+    line:   >-
+      {{ item | upper }}:
+      /mnt/{{ item }}
+      drvfs
+      defaults,noatime,umask=077,uid={{ getent_passwd[current_user][1] }},gid={{ getent_passwd[current_user][2] }}
+      0
+      0
+  loop: '{{ gdrive_letters }}'
+

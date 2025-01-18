@@ -37,3 +37,9 @@
       tags:
         - vim
 
+    # NOTE: See notes on the role task.
+    - role: fstab
+      tags:
+        - fstab
+        - never
+

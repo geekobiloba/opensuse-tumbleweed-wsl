@@ -1,0 +1,7 @@
+# vars for fstab role
+
+gdrive_letters:
+  - f
+  - g
+  - h
+
