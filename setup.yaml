@@ -33,3 +33,7 @@
       tags:
         - homebin
 
+    - role: vim
+      tags:
+        - vim
+

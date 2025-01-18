@@ -1,0 +1,8 @@
+# tasks for vim role
+
+- name: Installing global vimrc
+  become: true
+  copy:
+    src:  vimrc
+    dest: /etc/vimrc
+

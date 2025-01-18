@@ -1,0 +1,17 @@
+set nocompatible
+set number
+set backspace=2
+set tabstop=2
+set shiftwidth=2
+set expandtab
+set ignorecase
+set smartcase
+set encoding=utf-8
+set fileencoding=utf-8
+set backupcopy=yes
+set background=dark
+set laststatus=2
+set mouse=a
+
+syntax on
+
