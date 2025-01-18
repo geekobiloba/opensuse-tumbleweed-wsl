@@ -354,6 +354,9 @@ EOF
   if which govc.exe &>/dev/null && which pwsh.exe &>/dev/null ; then
     alias govc='pwsh.exe -c govc.exe'
   fi
+
+  # SSH agent
+  eval $(ssh-agent -s) 1>/dev/null
 fi
 
 # vim: ft=zsh:
