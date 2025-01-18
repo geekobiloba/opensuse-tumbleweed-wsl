@@ -18,6 +18,8 @@ packages:
     - netcat-openbsd
     - nmap # better than the Windows version
     - progress
+    - pyenv
+    - pyenv-zsh-completion
     - rsync
     - scout
     - screen
