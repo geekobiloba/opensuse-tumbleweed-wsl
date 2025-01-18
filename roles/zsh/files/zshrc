@@ -233,6 +233,12 @@ done
 # Aliases
 ################################################################################
 
+# safety
+alias rm='rm -i'
+alias mv='mv -i'
+alias cp='cp -i'
+
+# ls
 alias   ls='eza'
 alias    l='ls -lgah'
 alias   la='ls -lgAh'
@@ -243,63 +249,43 @@ alias   lt='ls -T'
 alias  llt='ll -T'
 alias  lat='la -T'
 alias  lta='lat'
-alias  lla='ls -lah'
-alias llat='ls -lahT'
+alias  lla='ls -lgah'
+alias llat='ls -lgahT'
 alias llta='llat'
 
-alias     rl="readlink -f"
+alias     rl='readlink -f'
 alias    rgh="rg --hidden -g '!.git'"
-alias    rga="rgh"
-alias    w3m="w3m -sixel"
-alias    cls="clear"
-alias    sed="sed  -E"
-alias   grep="grep -E --color"
-alias   diff="diff    --color"
-alias   ncal="cal -v"
-alias   cal3="cal -v3"
-alias   sudo="sudo "
-alias   trim='sed "s,^\\s+|\\s+\$,,g"'
-alias  xclip="trim | xclip -r -sel clip"
-alias  mkdir="mkdir -p"
-alias  dmesg="dmesg -HTL"
+alias    rga='rgh'
+alias    w3m='w3m -sixel'
+alias    cls='clear'
+alias    sed='sed  -E'
+alias   grep='grep -E --color'
+alias   diff='diff    --color'
+alias   ncal='cal -v'
+alias   cal3='cal -v3'
+alias   sudo='sudo '
+alias   trim="sed 's,^\\s+|\\s+\$,,g'"
+alias  xclip='trim | xclip -r -sel clip'
+alias  mkdir='mkdir -p'
+alias  dmesg='dmesg -HTL'
 alias reload="exec $SHELL"
-alias vmstat="vmstat -SM -w"
-alias iperf3="iperf"
-alias pbcopy="xclip"
+alias vmstat='vmstat -SM -w'
+alias iperf3='iperf'
+alias pbcopy='xclip'
 
 # nvim
 if which nvim &>/dev/null ; then
-  alias      vi="nvim"
-  alias     vim="nvim"
-  alias    view="nvim -R"
-  alias vimdiff="nvim -d"
+  alias      vi='nvim'
+  alias     vim='nvim'
+  alias    view='nvim -R'
+  alias vimdiff='nvim -d'
 fi
-
-################################################################################
-# Windows aliases
-################################################################################
-
-if which nvim.exe &>/dev/null ; then
-  alias      vi="nvim.exe"
-  alias     vim="nvim.exe"
-  alias    view="nvim.exe -R"
-  alias vimdiff="nvim.exe -d"
-fi
-
-for bin in yq bat rg fd iperf3 ; do
-  which ${bin}.exe &>/dev/null && alias ${bin}="${bin}.exe"
-done
 
 ################################################################################
 # govc
 ################################################################################
 
 test -r ~/.govcrc && . $_
-
-# govc on Windows
-which govc.exe &>/dev/null &&\
-which pwsh.exe &>/dev/null &&\
-alias govc='pwsh.exe -c govc.exe'
 
 ################################################################################
 # Functions
@@ -317,12 +303,58 @@ colortbl(){
 # k8s
 ################################################################################
 
-#test -d ~/.krew/bin && PATH=$_:$PATH && export PATH
-#
-#test -r ~/.kubectl-aliases/.kubectl_aliases && source $_
-#
-#alias  kns="kubectl ns"
-#alias kctx="kubectl ctx"
+test -d ~/.krew/bin && PATH=$_:$PATH && export PATH
+
+test -r ~/.kubectl-aliases/.kubectl_aliases && source $_
+
+alias  kns="kubectl ns"
+alias kctx="kubectl ctx"
+
+################################################################################
+# WSL
+################################################################################
+
+if uname -r | grep -q WSL ; then
+
+  # Windows command helper to work with WSL path smoothly
+  __import_win_cmd(){
+    local CMD=$1
+
+    cat <<EOF
+    __win_${CMD}(){
+      if [ -f "\$@[-1]" ] || [ -d "\$@[-1]" ]; then
+        ${CMD}.exe \$@[1,-2] "\$(wslpath -w \$@[-1])"
+        #DEBUG: true
+      else
+        ${CMD}.exe \$@
+        #DEBUG: false
+      fi
+    }
+EOF
+  }
+
+  # nvim
+  if which nvim.exe &>/dev/null ; then
+    eval "$(__import_win_cmd nvim)"
+
+    alias      vi="__win_nvim"
+    alias     vim="__win_nvim"
+    alias    view="__win_nvim -R"
+    alias vimdiff="__win_nvim -d"
+  fi
+
+  for bin in yq bat rg fd iperf3 ; do
+    if which ${bin}.exe &>/dev/null ; then
+      eval "$(__import_win_cmd $bin)"
+      alias ${bin}="__win_${bin}"
+    fi
+  done
+
+  # govc
+  if which govc.exe &>/dev/null && which pwsh.exe &>/dev/null ; then
+    alias govc='pwsh.exe -c govc.exe'
+  fi
+fi
 
 # vim: ft=zsh:
 
