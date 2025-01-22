@@ -1,0 +1,72 @@
+#!/usr/bin/env bash
+#
+# wt - Split and duplicate Windows Terminal from WSL
+#
+
+set -Eeuo pipefail
+
+################################################################################
+# Functions
+################################################################################
+
+showhelp(){
+  local  CMD="$(basename $0)"
+  local INFO="$(
+    awk '/^#[[:space:]]/ {sub("^#[[:space:]]+", "") ; print ; exit}' $0
+  )"
+
+  cat <<EOF
+
+$INFO
+
+USAGE
+
+  $CMD OPT
+
+  $CMD -h
+
+OPTIONS
+
+  -D  Duplicate Windows Terminal tab.
+
+  -H  Split Windows Terminal pane horizontally.
+
+  -V  Split Windows Terminal pane vertically.
+
+  -h  Show this help.
+
+NOTES
+
+  Windows Terminal profile name must equal the PRETTY_NAME variable in /etc/os-release.
+
+EOF
+}
+
+################################################################################
+# Main
+################################################################################
+
+case ${1:-} in
+  ("") # no arg at all
+    showhelp
+    ;;
+  (-*) # with option
+    . /etc/os-release
+
+    while getopts :DHVh optchar ; do 
+      case $optchar in
+        (D) wt.exe nt -p "$PRETTY_NAME" -d $PWD    ;;
+        (H) wt.exe sp -p "$PRETTY_NAME" -d $PWD -H ;;
+        (V) wt.exe sp -p "$PRETTY_NAME" -d $PWD -V ;;
+        (h) showhelp ; exit 0 ;;
+        (*) showhelp ; exit 1 ;; # wrong option
+      esac
+    done
+    ;;
+  (*) # no option, with arg
+    ipinfo $1
+    ;;
+esac
+
+# vim: ft=bash:
+

@@ -9,11 +9,11 @@ packages:
     - direnv
     - expect
     - eza # use Linux version instead of Windows to show correct permissions
+    - fd
     - file
     - git # for Ansible git module
     - gnu_parallel
     - htop
-    - iperf
     - ipmitool
     - jq
     - mtr
@@ -38,4 +38,6 @@ packages:
     - zellij
   absent:
     - govc
+    - iperf
+    - gh
 

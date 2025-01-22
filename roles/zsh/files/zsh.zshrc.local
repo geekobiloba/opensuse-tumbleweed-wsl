@@ -1,7 +1,7 @@
 alias     rm='rm -i'
 alias     mv='mv -i'
 alias     cp='cp -i'
-alias     rl="readlink -f"
+alias     rl='readlink -f'
 alias    cls='clear'
 alias    sed='sed  -E'
 alias   grep='grep -E --color'
