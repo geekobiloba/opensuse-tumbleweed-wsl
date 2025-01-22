@@ -2,6 +2,7 @@
 
 packages:
   present:
+    - bat
     - bind-utils
     - binutils
     - curl
@@ -12,14 +13,17 @@ packages:
     - git # for Ansible git module
     - gnu_parallel
     - htop
+    - iperf
     - ipmitool
     - jq
     - mtr
+    - neovim
     - netcat-openbsd
     - nmap # better than the Windows version
     - progress
     - pyenv
     - pyenv-zsh-completion
+    - ripgrep
     - rsync
     - scout
     - screen
@@ -30,12 +34,8 @@ packages:
     - traceroute # faster than Windows tracert
     - tree
     - whois
+    - yq
     - zellij
   absent:
-    - bat
     - govc
-    - iperf
-    - neovim
-    - ripgrep
-    - yq
 

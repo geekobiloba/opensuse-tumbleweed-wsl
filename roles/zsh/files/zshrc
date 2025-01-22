@@ -333,22 +333,22 @@ if uname -r | grep -q WSL ; then
 EOF
   }
 
-  # nvim
-  if which nvim.exe &>/dev/null ; then
-    eval "$(__import_win_cmd nvim)"
+  ## nvim
+  #if which nvim.exe &>/dev/null ; then
+  #  eval "$(__import_win_cmd nvim)"
 
-    alias      vi="__win_nvim"
-    alias     vim="__win_nvim"
-    alias    view="__win_nvim -R"
-    alias vimdiff="__win_nvim -d"
-  fi
+  #  alias      vi="__win_nvim"
+  #  alias     vim="__win_nvim"
+  #  alias    view="__win_nvim -R"
+  #  alias vimdiff="__win_nvim -d"
+  #fi
 
-  for bin in yq bat rg fd iperf3 ; do
-    if which ${bin}.exe &>/dev/null ; then
-      eval "$(__import_win_cmd $bin)"
-      alias ${bin}="__win_${bin}"
-    fi
-  done
+  #for bin in yq bat rg fd iperf3 ; do
+  #  if which ${bin}.exe &>/dev/null ; then
+  #    eval "$(__import_win_cmd $bin)"
+  #    alias ${bin}="__win_${bin}"
+  #  fi
+  #done
 
   # govc
   if which govc.exe &>/dev/null && which pwsh.exe &>/dev/null ; then
