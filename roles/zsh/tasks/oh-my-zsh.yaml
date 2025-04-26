@@ -19,18 +19,21 @@
         repo:  https://github.com/zsh-users/zsh-autosuggestions
         dest:  ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions
         depth: 1
+        force: true
 
     - name: Installing zsh-history-substring-search
       git:
         repo:  https://github.com/zsh-users/zsh-history-substring-search
         dest:  ~/.oh-my-zsh/custom/plugins/zsh-history-substring-search
         depth: 1
+        force: true
 
     - name: Installing fast-syntax-highlighting
       git:
         repo:  https://github.com/zdharma-continuum/fast-syntax-highlighting
         dest:  ~/.oh-my-zsh/custom/plugins/fast-syntax-highlighting
         depth: 1
+        force: true
 
 - name: powerlevel10k
   block:
@@ -40,6 +43,7 @@
         repo:  https://github.com/romkatv/powerlevel10k
         dest:  ~/.oh-my-zsh/custom/themes/powerlevel10k
         depth: 1
+        force: true
 
     - name: Installing powerlevel10k config
       copy:

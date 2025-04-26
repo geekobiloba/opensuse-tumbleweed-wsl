@@ -1,4 +1,4 @@
-# tasks for wsl-config role
+# tasks for wsl role
 
 - name: 'Setting WSL config: automount'
   become: true
@@ -6,7 +6,7 @@
     path:    /etc/wsl.conf
     section: automount
     option:  options
-    value:   metadata
+    value:   metadata,umask=022,fmask=111
 
 - name: 'Setting WSL config: systemd'
   become: true

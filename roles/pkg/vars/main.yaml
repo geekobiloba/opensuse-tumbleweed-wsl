@@ -11,6 +11,7 @@ packages:
     - eza # use Linux version instead of Windows to show correct permissions
     - fd
     - file
+    - gh
     - git # for Ansible git module
     - gnu_parallel
     - htop
@@ -39,5 +40,4 @@ packages:
   absent:
     - govc
     - iperf
-    - gh
 

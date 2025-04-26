@@ -13,9 +13,9 @@
 
   roles:
 
-    - role: wsl-config
+    - role: wsl
       tags:
-        - wsl-config
+        - wsl
 
     - role: pkg
       tags:
