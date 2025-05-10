@@ -2,6 +2,13 @@
 
 ![Preview on Windows Terminal](https://github.com/geekobiloba/opensuse-tumbleweed-wsl/blob/main/preview.png)
 
+##  Highlights
+
+-   Zsh + Oh My Zsh
+-   Podman + Podman Compose
+-   Miscelaneus useful packages
+-   Some fixes.
+
 ##  How-to
 
 1.  Install OpenSUSE Tumbleweed from Windows Store,
@@ -17,14 +24,16 @@
     wsl --shutdown ; wsl --set-default openSUSE-Tumbleweed
     ```
 
-3.  Recommendedly, add the following lines in Windows `$HOME\.wslconfig` file,
+3.  Recommendedly, add the following lines into Windows `$HOME\.wslconfig` file,[^gui]
 
     ```powershell
     [wsl2]
-    networkingMode = mirrored
+    networkingMode    = mirrored
+    kernelCommandLine = cgroup_no_v1=all
+    guiApplications   = false
     ```
 
-4. Open Tumbleweed shell again, and upgrade all packages,
+4. Open Tumbleweed again, and upgrade all packages,
 
     ```shell
     sudo zypper ref && sudo zypper dup
@@ -37,12 +46,11 @@
     wsl --shutdown
     ```
 
-6.  Optionally, set passwordless sudo.
-    This will simplify your life in WSL.
+6.  Optionally, set passwordless sudo to make your life easier,
 
     ```shell
-    sudo zypper in -y system-group-wheel &&\
-    sudo sh -c "echo '%wheel ALL=(ALL:ALL) NOPASSWD: ALL' > /usr/etc/sudoers.d/wheel" &&\
+    sudo zypper in -y system-group-wheel && \
+    sudo sh -c "echo '%wheel ALL=(ALL:ALL) NOPASSWD: ALL' > /usr/etc/sudoers.d/wheel" && \
     sudo usermod -aG wheel $USER
     ```
 
@@ -75,9 +83,9 @@
 8.  Install Ansible with pipx,
 
     ```shell
-    pip install --upgrade pip &&\
-    pip install pipx &&\
-    pipx install --include-deps ansible &&\
+    pip install --upgrade pip && \
+    pip install pipx && \
+    pipx install --include-deps ansible && \
     pipx inject  --include-apps ansible ansible-lint
     ```
 
@@ -100,6 +108,12 @@
     wsl --shutdown
     ```
 
+[^gui]: The `guiApplications = false` line
+        prevents running GUI application from WSL,
+        which is normally unneeded.
+        It can fix `fastfect`, too,
+        but we have already a better fix in `wsl` role.
+
 ##  Using Ansible on WSL from PowerShell
 
 Run the following command to add `ansible` function to PowerShell profile,
@@ -113,26 +127,5 @@ New-Item -ItemType File -Path $PROFILE -ErrorAction Ignore ;`
 function ansible {wsl --shell-type login -- ansible @Args}
 
 '@ | Out-File -Append -FilePath $PROFILE
-```
-
-##  Using Windows CLI tools from inside WSL
-
-Some tools can be installed on Windows and used from inside the WSL, like
-[bat](https://github.com/sharkdp/bat),
-[fd](https://github.com/sharkdp/fd), and
-[yq](https://github.com/mikefarah/yq).
-
-Install the tools with `winget`,
-
-```powershell
-winget install sharkdp.bat sharkdp.fd MikeFarah.yq
-```
-
-Then, set their aliases on `~/.zshrc` or `~/.bashrc` inside the WSL distro,
-
-```shell
-for bin in bat eza yq ; do
-  which ${bin}.exe &>/dev/null && alias ${bin}="${bin}.exe"
-done
 ```
 

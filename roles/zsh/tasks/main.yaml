@@ -1,39 +1,38 @@
 # tasks for zsh role
 
-- name: Installing zsh & fzf
+- name: System-wide Zsh setup
   become: true
-  community.general.zypper:
-    state:              present
-    disable_recommends: false
-    name:
-      - zsh
-      - fzf
-      - fzf-zsh-integration
+  block:
 
-- name: Setting zsh as current user login shell
-  become: true
-  user:
-    name:  "{{ current_user }}"
-    shell: /bin/zsh
+    - name: Install zsh & fzf
+      community.general.zypper:
+        state:              present
+        disable_recommends: false
+        name:
+          - zsh
+          - fzf
+          - fzf-zsh-integration
 
-- name: Setting system-wide zshrc
-  become: true
-  copy:
-    src:  zsh.zshrc.local
-    dest: /etc/zsh.zshrc.local
+    - name: Set zsh as current user login shell
+      user:
+        name:  "{{ current_user }}"
+        shell: /bin/zsh
 
-- name: Installing user's zshrc
+    - name: Set system-wide zshrc
+      copy:
+        src:  zsh.zshrc.local
+        dest: /etc/zsh.zshrc.local
+
+    - name: Install govc completion
+      import_tasks: govc-completion.yaml
+
+- name: Install user's zshrc
   tags:
     - zshrc
   copy:
     src:  zshrc
     dest: ~/.zshrc
 
-- name: Installing Oh My Zsh
+- name: Install Oh My Zsh
   import_tasks: oh-my-zsh.yaml
-
-# Doesn't work
-- name: Installing govc completion
-  when: false
-  import_tasks: govc-completion.yaml
 

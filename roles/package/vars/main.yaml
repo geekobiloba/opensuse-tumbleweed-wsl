@@ -5,12 +5,15 @@ packages:
     - bat
     - bind-utils
     - binutils
+    - byobu
     - cnf
     - cnf-zsh
     - curl
     - direnv
     - expect
     - eza # use Linux version instead of Windows to show correct permissions
+    - fastfetch
+    - fastfetch-zsh-completion
     - fd
     - file
     - gh
@@ -18,6 +21,7 @@ packages:
     - git # for Ansible git module
     - gnu_parallel
     - htop
+    - iperf
     - ipmitool
     - jq
     - mtr
@@ -29,17 +33,13 @@ packages:
     - pyenv-zsh-completion
     - ripgrep
     - rsync
-    - screen
     - socat
     - subnetcalc
     - tcpdump
     - telnet # better than the Windows version
+    - tmux
     - traceroute # faster than Windows tracert
     - tree
     - whois
     - yq
-    - zellij
-  absent:
-    - govc
-    - iperf
 

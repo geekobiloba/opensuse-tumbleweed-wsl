@@ -1,0 +1,15 @@
+# fix_wslg tasks for wsl role
+
+# Improved from the original solution:
+# https://github.com/microsoft/wslg/issues/1156#issuecomment-1876266025
+- name: Copy fix-wslg.service file
+  copy:
+    src:  fix-wslg.service
+    dest: /etc/systemd/system/fix-wslg.service
+
+- name: Enable fix-wslg.service
+  systemd_service:
+    name:          fix-wslg
+    enabled:       true
+    daemon_reload: true
+

@@ -49,57 +49,6 @@ eval "$(pyenv init -)"
 # END pyenv
 
 ################################################################################
-# neofetch/neowofetch
-#
-# Should come before powerlevel10k to correctly call at startup
-################################################################################
-
-# Get the first found image from neofetch config directory
-NEOFETCH_IMG="$(
-  find ~/.config/neofetch/ -type f -exec file --mime-type {} \; \
-  | awk -F: '$2~/image/ {img[i++]=$1} END {print img[0]}'
-)"
-
-neofetch(){
-  case $1 in
-    ("")
-      if [ -r "$NEOFETCH_IMG" ] ; then
-
-        # Disabling packages and de_version speeds up neofetch.
-        # And, yes, --iterm2 option works on Linux, too,
-        # at least in Konsole and Yakuake.
-        command neofetch --disable packages --de_version off \
-          --memory_display infobar --bar_char ▓ ░ \
-          --iterm2 $NEOFETCH_IMG --size 300px
-      else
-        if awk -F '="?| +' '$1 == "ID_LIKE" && $2 == "opensuse" {exit 1}' /etc/os-release ; then
-          command neofetch --disable packages --de_version off \
-            --memory_display infobar --bar_char ▓ ░
-        else
-          command neofetch --disable packages --de_version off \
-            --memory_display infobar --bar_char ▓ ░ \
-            --ascii_distro opensuse
-        fi
-      fi
-      ;;
-    (*) command neofetch $@ ;;
-  esac
-}
-
-alias neowofetch='neofetch'
-
-# Show neofetch at startup when all these conditions are met:
-#
-#   1. NVIM is not set
-#   2. NO_NEOFETCH is not set
-#   3. KONSOLE_VERSION is set
-#
-[   -z "${NVIM}"            ] && \
-[   -z "${NO_NEOFETCH:-}"   ] && \
-[ ! -z "${KONSOLE_VERSION}" ] && \
-neofetch
-
-################################################################################
 # Powerlevel10k
 ################################################################################
 
@@ -286,11 +235,16 @@ if which nvim &>/dev/null ; then
   alias vimdiff='nvim -d'
 fi
 
+# fastfetch
+alias  neofetch='fastfetch'
+alias fastfetch='fastfetch -l opensuse'
+
 ################################################################################
 # govc
 ################################################################################
 
-test -r ~/.govcrc && . $_
+test -r ~/.govcrc                                   && . $_
+test -r /etc/bash_completion.d/govc_bash_completion && . $_
 
 ################################################################################
 # Functions
@@ -338,6 +292,10 @@ if uname -r | grep -q WSL ; then
 EOF
   }
 
+#-------------------------------------------------------------------------------
+# Examples
+#-------------------------------------------------------------------------------
+
   ## nvim
   #if which nvim.exe &>/dev/null ; then
   #  eval "$(__import_win_cmd nvim)"
@@ -348,18 +306,17 @@ EOF
   #  alias vimdiff="__win_nvim -d"
   #fi
 
-  #for bin in yq bat rg fd iperf3 ; do
-  for bin in gh iperf3 ; do
-    if which ${bin}.exe &>/dev/null ; then
-      eval "$(__import_win_cmd $bin)"
-      alias ${bin}="__win_${bin}"
-    fi
-  done
+  #for bin in iperf3 ; do
+  #  if which ${bin}.exe &>/dev/null ; then
+  #    eval "$(__import_win_cmd $bin)"
+  #    alias ${bin}="__win_${bin}"
+  #  fi
+  #done
 
-  # govc
-  if which govc.exe &>/dev/null && which pwsh.exe &>/dev/null ; then
-    alias govc='pwsh.exe -c govc.exe'
-  fi
+  ## govc
+  #if which govc.exe &>/dev/null && which pwsh.exe &>/dev/null ; then
+  #  alias govc='pwsh.exe -c govc.exe'
+  #fi
 
   # SSH agent
   eval $(ssh-agent -s) 1>/dev/null

@@ -1,6 +1,6 @@
 # tasks for vim role
 
-- name: Installing global vimrc
+- name: Install global vimrc
   become: true
   copy:
     src:  vimrc

@@ -1,0 +1,12 @@
+# main tasks for systemd role
+
+- name: 'Set WSL config: systemd'
+  become: true
+  tags:
+    - systemd
+  community.general.ini_file:
+    path:    /etc/wsl.conf
+    section: boot
+    option:  systemd
+    value:   'true'
+

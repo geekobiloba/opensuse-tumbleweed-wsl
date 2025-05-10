@@ -1,29 +1,24 @@
 # tasks for package role
 
-- name: Installing general packages
+- name: Packages setup
   become: true
-  community.general.zypper:
-    name:               '{{ packages.present }}'
-    state:              present
-    disable_recommends: false
+  block:
 
-- name: Uninstalling unneeded packages
-  become: true
-  community.general.zypper:
-    name:       '{{ packages.absent }}'
-    state:      absent
-    clean_deps: true
+    - name: Install general packages
+      community.general.zypper:
+        name:               '{{ packages.present }}'
+        state:              present
+        disable_recommends: false
 
-- name: Installing wslu
-  become: true
-  tags:
-    - wslu
-  import_tasks: wslu.yaml
+    - name: Uninstall unneeded packages
+      when: packages.absent is defined
+      community.general.zypper:
+        name:       '{{ packages.absent }}'
+        state:      absent
+        clean_deps: true
 
-- name: Installing neowofetch
-  become: true
-  tags:
-    - neofetch
-    - neowofetch
-  import_tasks: neowofetch.yaml
+    - name: Install wslu
+      tags:
+        - wslu
+      import_tasks: wslu.yaml
 

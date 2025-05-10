@@ -1,0 +1,12 @@
+[Unit]
+Description=Fix WSLg
+
+[Service]
+Type=oneshot
+ConditionPathIsDirectory=/mnt/wslg/.X11-unix
+ExecStartPre=/bin/sh -c 'umount /tmp/.X11-unix || true'
+ExecStartPre=/bin/rm -rf /tmp/.X11-unix
+ExecStart=/bin/ln -s /mnt/wslg/.X11-unix /tmp/.X11-unix
+
+[Install]
+WantedBy=multi-user.target

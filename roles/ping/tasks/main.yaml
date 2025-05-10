@@ -1,19 +1,21 @@
 # tasks for ping role
 
-- name: Installing libcap-progs
+- name: ping fix
   become: true
-  community.general.zypper:
-    name:               libcap-progs
-    state:              present
-    disable_recommends: false
+  block:
 
-- name: Checking ping capability
-  changed_when: false
-  shell: getcap /usr/bin/ping
-  register: ping_cap
+    - name: Install libcap-progs
+      community.general.zypper:
+        name:               libcap-progs
+        state:              present
+        disable_recommends: false
 
-- name: Enabling ping
-  become: true
-  when: ping_cap.stdout == ""
-  shell: setcap cap_net_raw+p /usr/bin/ping
+    - name: Check ping capability
+      changed_when: false
+      shell: getcap /usr/bin/ping
+      register: ping_cap
+
+    - name: Enable ping
+      when: ping_cap.stdout == ""
+      shell: setcap cap_net_raw+p /usr/bin/ping
 

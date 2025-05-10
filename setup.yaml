@@ -13,29 +13,17 @@
 
   roles:
 
-    - role: wsl
+    - role: basic
       tags:
-        - wsl
-
-    - role: package
-      tags:
-        - package
-
-    - role: ping
-      tags:
-        - ping
-
-    - role: zsh
-      tags:
-        - zsh
+        - basic
 
     - role: homebin
       tags:
         - homebin
 
-    - role: vim
+    - role: podman
       tags:
-        - vim
+        - podman
 
     # NOTE: See notes on the role task.
     - role: fstab

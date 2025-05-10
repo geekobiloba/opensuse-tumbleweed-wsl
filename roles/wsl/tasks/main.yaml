@@ -1,21 +1,14 @@
 # tasks for wsl role
 
-- name: 'Setting WSL config: automount'
-  become: true
-  community.general.ini_file:
-    path:    /etc/wsl.conf
-    section: automount
-    option:  options
-    value:   metadata,umask=022,fmask=111
-
-- name: 'Setting WSL config: systemd'
-  become: true
+- name: WSL setup
   tags:
-    - systemd
-    - never
-  community.general.ini_file:
-    path:    /etc/wsl.conf
-    section: boot
-    option:  systemd
-    value:   'true'
+    - wsl
+  become: true
+  block:
+
+    - name: Install WSL config
+      import_tasks: wsl_config.yaml
+
+    - name: Fix WSLg
+      import_tasks: fix_wslg.yaml
 

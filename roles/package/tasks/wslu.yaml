@@ -1,6 +1,6 @@
 # wslu tasks for package role
 
-- name: Checking existing wslu repo file
+- name: Check existing wslu repo file
   stat:
     path: /etc/zypp/repos.d/wslutilities-wslu-opensuse-tumbleweed.repo
   register: wslu_repo_file
@@ -9,14 +9,14 @@
   when: not wslu_repo_file.stat.exists
   block:
 
-    - name: Importing wslu repo
+    - name: Import wslu repo
       get_url:
         url:  https://copr.fedorainfracloud.org/coprs/wslutilities/wslu/repo/opensuse-tumbleweed/wslutilities-wslu-opensuse-tumbleweed.repo
         dest: /etc/zypp/repos.d/wslutilities-wslu-opensuse-tumbleweed.repo
         mode: '0644'
       register: wslu_repo
 
-    - name: Refreshing wslu repo
+    - name: Refresh wslu repo
       when: wslu_repo.changed
       shell: >-
         zypper --non-interactive modifyrepo --enable --no-gpgcheck --refresh
@@ -25,7 +25,7 @@
         zypper --non-interactive --gpg-auto-import-keys refresh
         copr:copr.fedorainfracloud.org:wslutilities:wslu
 
-- name: Installing wslu
+- name: Install wslu
   community.general.zypper:
     name:               wslu
     disable_recommends: false

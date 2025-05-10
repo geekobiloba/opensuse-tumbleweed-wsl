@@ -1,0 +1,9 @@
+# meta file for bacis role
+
+dependencies:
+  - role: wsl
+  - role: package
+  - role: zsh
+  - role: ping
+  - role: vim
+

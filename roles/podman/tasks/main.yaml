@@ -1,0 +1,44 @@
+# main tasks for podman role
+
+- name: Podman setup
+  become: true
+  block:
+
+    - name: Install Podman
+      community.general.zypper:
+        disable_recommends: false
+        name:
+          - podman
+          - podman-docker
+          - python313-podman-compose
+
+    - name: Create /etc/containers/nodocker
+      changed_when: false
+      file:
+        path:  /etc/containers/nodocker
+        state: touch
+
+    - name: Set unprivileged ports
+      ansible.posix.sysctl:
+        name:  net.ipv4.ip_unprivileged_port_start
+        value: 53 # DNS
+
+    - name: Fix Podman on WSL
+      when:
+        - ansible_virtualization_type is defined
+        - ansible_virtualization_type == 'wsl'
+      block:
+
+        - name: 'Fix Podman on WSL: shared mount for /'
+          copy:
+            src:  podman-wsl.sh
+            dest: /etc/profile.d/podman-wsl.sh
+
+        # See: https://github.com/containers/podman/issues/25201#issuecomment-2769457427
+        - name: 'Fix Podman on WSL: iptables as firewall_driver'
+          community.general.ini_file:
+            path:    /etc/containers/containers.conf
+            section: network
+            option:  firewall_driver
+            value:   '"iptables"' # should be explicitly quoted
+

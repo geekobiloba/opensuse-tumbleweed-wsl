@@ -1,0 +1,9 @@
+# wsl_config tasks for wsl role
+
+- name: 'Set WSL config: automount'
+  community.general.ini_file:
+    path:    /etc/wsl.conf
+    section: automount
+    option:  options
+    value:   metadata,umask=022,fmask=011
+
