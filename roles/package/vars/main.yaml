@@ -5,6 +5,8 @@ packages:
     - bat
     - bind-utils
     - binutils
+    - cnf
+    - cnf-zsh
     - curl
     - direnv
     - expect
@@ -27,7 +29,6 @@ packages:
     - pyenv-zsh-completion
     - ripgrep
     - rsync
-    - scout
     - screen
     - socat
     - subnetcalc

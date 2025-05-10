@@ -33,6 +33,9 @@ bindkey "\e[3;5~" backward-kill-word
 # Use bash completion
 autoload -U bashcompinit && bashcompinit
 
+# Command not found
+test -r /etc/zsh_command_not_found && . $_
+
 ################################################################################
 # pyenv
 #
