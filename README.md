@@ -1,4 +1,4 @@
-#   OpenSUSE Tumbleweed setup for WSL
+#   OpenSUSE Tumbleweed on WSL setup with Ansible
 
 ![Preview on Windows Terminal](https://github.com/geekobiloba/opensuse-tumbleweed-wsl/blob/main/preview.png)
 

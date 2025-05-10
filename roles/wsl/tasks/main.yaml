@@ -9,6 +9,3 @@
     - name: Install WSL config
       import_tasks: wsl_config.yaml
 
-    - name: Fix WSLg
-      import_tasks: fix_wslg.yaml
-

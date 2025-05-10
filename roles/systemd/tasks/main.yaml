@@ -1,12 +1,18 @@
 # main tasks for systemd role
 
-- name: 'Set WSL config: systemd'
-  become: true
+- name: systemd setup
   tags:
     - systemd
-  community.general.ini_file:
-    path:    /etc/wsl.conf
-    section: boot
-    option:  systemd
-    value:   'true'
+  become: true
+  block:
+
+    - name: 'Set WSL config: systemd'
+      community.general.ini_file:
+        path:    /etc/wsl.conf
+        section: boot
+        option:  systemd
+        value:   'true'
+
+    - name: Fix WSLg
+      import_tasks: fix_wslg.yaml
 
