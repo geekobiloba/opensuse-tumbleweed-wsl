@@ -1,4 +1,4 @@
-# vars for pkg role
+# vars for package role
 
 packages:
   present:
@@ -12,6 +12,7 @@ packages:
     - fd
     - file
     - gh
+    - gh-zsh-completion
     - git # for Ansible git module
     - gnu_parallel
     - htop

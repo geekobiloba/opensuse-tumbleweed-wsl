@@ -1,4 +1,4 @@
-# neowofetch tasks for pkg role
+# neowofetch tasks for package role
 
 - name: Uninstalling neofetch
   become: true

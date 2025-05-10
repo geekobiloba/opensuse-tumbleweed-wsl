@@ -17,9 +17,9 @@
       tags:
         - wsl
 
-    - role: pkg
+    - role: package
       tags:
-        - pkg
+        - package
 
     - role: ping
       tags:

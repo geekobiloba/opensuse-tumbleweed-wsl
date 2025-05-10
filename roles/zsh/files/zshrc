@@ -26,7 +26,9 @@ export BAT_THEME="Dracula"
 setopt HIST_IGNORE_SPACE
 
 # Additional key bindings
-bindkey "^U" backward-kill-line
+bindkey "^U"      backward-kill-line
+bindkey "^H"      backward-kill-word
+bindkey "\e[3;5~" backward-kill-word
 
 # Use bash completion
 autoload -U bashcompinit && bashcompinit

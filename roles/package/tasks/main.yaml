@@ -1,4 +1,4 @@
-# tasks for pkg role
+# tasks for package role
 
 - name: Installing general packages
   become: true

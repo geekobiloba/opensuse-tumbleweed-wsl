@@ -1,4 +1,4 @@
-# wslu tasks for pkg role
+# wslu tasks for package role
 
 - name: Checking existing wslu repo file
   stat:
